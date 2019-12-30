@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bonus/login_page.dart';
 import 'package:flutter_bonus/sign_in.dart';
 
+import 'list_screen.dart';
+
 class FirstScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -70,6 +72,28 @@ class FirstScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
                     'Sign Out',
+                    style: TextStyle(fontSize: 25, color: Colors.white),
+                  ),
+                ),
+                elevation: 5,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(40)),
+              ),
+              RaisedButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return ListScreen();
+                      },
+                    ),
+                  );
+                },
+                color: Colors.deepPurple,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Go to app',
                     style: TextStyle(fontSize: 25, color: Colors.white),
                   ),
                 ),
