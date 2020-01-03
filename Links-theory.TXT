@@ -1,0 +1,7 @@
+animations tutorial--
+https://www.youtube.com/watch?v=FgCsjMEJolY&t=78s&fbclid=IwAR3d_cKWaLIhj2uZ1STx4jfTvqrWXje6BwYURtCelh6ihz2jvzzjUEfHYz4
+---google sign in tutorial:
+https://medium.com/flutter-community/flutter-implementing-google-sign-in-71888bca24ed?fbclid=IwAR0-B8pRN1MoQ_hyroWhhFQ6IE1SrgBUe4oz7YJcNTRgyifTd7fdFI9Fs0g
+-- apply hero whenever you are moving to a detail page
+tut_link: https://flutter.dev/docs/development/ui/animations/hero-animations
+The hero refers to the widget that flies between screens.

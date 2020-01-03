@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'detail.dart';
+import 'detail/detail.dart';
 import 'model/championship.dart';
 
 class ListScreen extends StatelessWidget {
@@ -26,21 +26,9 @@ class ListPage extends StatefulWidget {
 }
 
 class _ListPageState extends State<ListPage> {
-  List<MySuperHero> items = new List<MySuperHero>();
   List<Championship> championships = new List<Championship>();
 
   _ListPageState() {
-    items.add(new MySuperHero("assets/badge.png", "Iron Man",
-        "Genius. Billionaire. Playboy. Philanthropist. Tony Stark's confidence is only matched by his high-flying abilities as the hero called Iron Man."));
-    items.add(new MySuperHero("assets/captain_america.png", "Captain America",
-        "Recipient of the Super-Soldier serum, World War II hero Steve Rogers fights for American ideals as one of the world’s mightiest heroes and the leader of the Avengers."));
-    items.add(new MySuperHero("assets/thor.png", "Thor",
-        "The son of Odin uses his mighty abilities as the God of Thunder to protect his home Asgard and planet Earth alike."));
-    items.add(new MySuperHero("assets/hulk.png", "Hulk",
-        "Dr. Bruce Banner lives a life caught between the soft-spoken scientist he’s always been and the uncontrollable green monster powered by his rage."));
-    items.add(new MySuperHero("assets/black_widow.png", "Black Widow",
-        "Despite super spy Natasha Romanoff’s checkered past, she’s become one of S.H.I.E.L.D.’s most deadly assassins and a frequent member of the Avengers."));
-
     championships.add(new Championship('12', 'Liga 1 Bergembier'));
     championships.add(new Championship('13', 'Liga 1 Betano'));
     championships.add(new Championship('15', 'Ligue 1'));

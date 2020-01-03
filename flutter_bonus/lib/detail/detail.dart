@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'model/championship.dart';
+import 'package:flutter_bonus/model/championship.dart';
 
 class ChampionshipDetailPage extends StatefulWidget {
   Championship _currentChampionship;
