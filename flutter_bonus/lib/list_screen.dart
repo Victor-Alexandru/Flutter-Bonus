@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'detail/detail.dart';
 import 'model/championship.dart';
+import 'package:toast/toast.dart';
 
 class ListScreen extends StatelessWidget {
   // This widget is the root of your application.
@@ -27,6 +28,10 @@ class ListPage extends StatefulWidget {
 
 class _ListPageState extends State<ListPage> {
   List<Championship> championships = new List<Championship>();
+
+  final _formKey = GlobalKey<FormState>();
+  String _input_total_matches;
+  String _input_trophy;
 
   _ListPageState() {
     championships.add(new Championship('12', 'Liga 1 Bergembier'));
@@ -83,14 +88,12 @@ class _ListPageState extends State<ListPage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Stack(
-          children: <Widget>[
-            ListView.builder(
-              itemCount: championships.length,
-              itemBuilder: (context, index) => ChampionshipCell(context, index),
-            ),
-          ],
-        ),
+        child: Stack(children: <Widget>[
+          ListView.builder(
+            itemCount: championships.length,
+            itemBuilder: (context, index) => ChampionshipCell(context, index),
+          ),
+        ]),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
