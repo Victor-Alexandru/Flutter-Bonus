@@ -33,10 +33,20 @@ class _ListPageState extends State<ListPage> {
   String _input_total_matches;
   String _input_trophy;
 
+  final TextEditingController _textEditingController =
+      new TextEditingController();
+  final TextEditingController _textEditingControllerTM =
+      new TextEditingController();
+
   _ListPageState() {
     championships.add(new Championship('12', 'Liga 1 Bergembier'));
     championships.add(new Championship('13', 'Liga 1 Betano'));
     championships.add(new Championship('15', 'Ligue 1'));
+    championships.add(new Championship('20', 'Medicine Championsip'));
+    championships.add(new Championship('20', 'Medicine Championsip'));
+    championships.add(new Championship('20', 'Medicine Championsip'));
+    championships.add(new Championship('20', 'Medicine Championsip'));
+    championships.add(new Championship('20', 'Medicine Championsip'));
     championships.add(new Championship('20', 'Medicine Championsip'));
   }
 
@@ -83,9 +93,16 @@ class _ListPageState extends State<ListPage> {
 
   @override
   Widget build(BuildContext context) {
+    var favorite = Icons.favorite;
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.list),
+            onPressed: () {},
+          ),
+        ],
       ),
       body: Center(
         child: Stack(children: <Widget>[
@@ -95,6 +112,58 @@ class _ListPageState extends State<ListPage> {
           ),
         ]),
       ), // This trailing comma makes auto-formatting nicer for build methods.
+      floatingActionButton: FloatingActionButton(
+          tooltip: "Add Item",
+          backgroundColor: Colors.redAccent,
+          child: new ListTile(
+            title: new Icon(Icons.add),
+          ),
+          onPressed: _showFormDialog),
     );
+  }
+
+  void _showFormDialog() {
+    _textEditingController.clear();
+    _textEditingControllerTM.clear();
+    var alert = new AlertDialog(
+      content: new Row(
+        children: <Widget>[
+          new Expanded(
+              child: new TextField(
+            controller: _textEditingController,
+            autofocus: true,
+            decoration: new InputDecoration(
+              labelText: "Trophy",
+              hintText: "not blank",
+            ),
+          )),
+          new Expanded(
+              child: new TextField(
+            controller: _textEditingControllerTM,
+            autofocus: true,
+            decoration: new InputDecoration(
+              labelText: "Total Matches",
+              hintText: "not blank",
+            ),
+          )),
+        ],
+      ),
+      actions: <Widget>[
+        new FlatButton(
+            onPressed: () {
+              if (_textEditingController.text != "" &&
+                  _textEditingControllerTM.text != "") {
+                Toast.show("You can submit", context,
+                    duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
+              }
+            },
+            child: Text("Save")),
+      ],
+    );
+    showDialog(
+        context: context,
+        builder: (_) {
+          return alert;
+        });
   }
 }
