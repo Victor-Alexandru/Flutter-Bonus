@@ -34,6 +34,7 @@ class _ChampionshipDetailPageState extends State<ChampionshipDetailPage> {
   String _url;
   String _putUrl;
   String _deleteUrl;
+  bool isRed = true;
 
   Future<bool> check() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
@@ -59,9 +60,18 @@ class _ChampionshipDetailPageState extends State<ChampionshipDetailPage> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_currentChampionship.trophy),
-      ),
+      appBar:
+          AppBar(title: Text(_currentChampionship.trophy), actions: <Widget>[
+        IconButton(
+          icon: Icon(Icons.swap_horizontal_circle),
+          onPressed: () {
+            setState(() {
+              isRed = isRed ? false : true;
+            });
+          },
+        ),
+      ]),
+      backgroundColor: isRed ? Colors.white : Colors.white70,
       body: Container(
         child: Column(children: [
           Container(
