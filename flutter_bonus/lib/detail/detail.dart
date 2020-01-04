@@ -1,28 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bonus/model/championship.dart';
 import 'package:toast/toast.dart';
+import 'package:http/http.dart';
 
 class ChampionshipDetailPage extends StatefulWidget {
   Championship _currentChampionship;
+  String _url;
+  List<Championship> _championships;
+  var _index;
 
-  ChampionshipDetailPage(Championship c) {
+  ChampionshipDetailPage(
+      Championship c, String url, List<Championship> championships, var index) {
     _currentChampionship = c;
+    _url = url;
+    _championships = championships;
+    _index = index;
   }
 
   @override
-  _ChampionshipDetailPageState createState() =>
-      _ChampionshipDetailPageState(_currentChampionship);
+  _ChampionshipDetailPageState createState() => _ChampionshipDetailPageState(
+      _currentChampionship, _url, _championships, _index);
 }
 
 class _ChampionshipDetailPageState extends State<ChampionshipDetailPage> {
   Championship _currentChampionship;
-
+  List<Championship> _championships;
+  var _index;
   final _formKey = GlobalKey<FormState>();
   String _input_total_matches;
   String _input_trophy;
+  String _url;
+  String _putUrl;
+  String _deleteUrl;
 
-  _ChampionshipDetailPageState(Championship c) {
+  _ChampionshipDetailPageState(Championship c, String _url,
+      List<Championship> championships, var index) {
     this._currentChampionship = c;
+    _url = _url;
+    _putUrl = _url + c.id.toString() + "/";
+    _deleteUrl = _url + c.id.toString() + "/";
+    _championships = championships;
+    _index = index;
   }
 
   @override
@@ -103,13 +121,13 @@ class _ChampionshipDetailPageState extends State<ChampionshipDetailPage> {
 
                       if (form.validate()) {
                         if (_input_total_matches != "" && _input_trophy != "") {
-                          Toast.show(
+                          String json = '{"total_matches":"' +
+                              _input_total_matches +
+                              '" , "trophy": "' +
                               _input_trophy +
-                                  "      :     " +
-                                  _input_total_matches,
-                              context,
-                              duration: Toast.LENGTH_SHORT,
-                              gravity: Toast.BOTTOM);
+                              '"}';
+                          _makePutrequest(
+                              json, _input_total_matches, _input_trophy);
                         }
                       }
                     }
@@ -121,6 +139,9 @@ class _ChampionshipDetailPageState extends State<ChampionshipDetailPage> {
                   color: Colors.green,
                 ),
                 RaisedButton(
+                  onPressed: () => {
+                    this._delete(_currentChampionship.id, _index),
+                  },
                   child: Text(
                     "Delete",
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
@@ -133,5 +154,33 @@ class _ChampionshipDetailPageState extends State<ChampionshipDetailPage> {
         ]),
       ),
     );
+  }
+
+  _delete(c_id, _index) async {
+    Response response = await delete(_deleteUrl);
+    if (response.statusCode == 204) {
+      setState(() {
+        _championships.removeAt(_index);
+        Navigator.pop(context);
+      });
+      print("delete a avut succcess");
+    }
+  }
+
+  _makePutrequest(json, tm, trp) async {
+    Map<String, String> headers = {"Content-type": "application/json"};
+    Response response = await put(_putUrl, headers: headers, body: json);
+    if (response.statusCode == 200) {
+      setState(() {
+        var c1 = new Championship(tm, trp);
+        c1.id = _currentChampionship.id;
+        setState(() {
+          _championships[_index] = c1;
+          _currentChampionship = c1;
+        });
+      });
+      print("Put cu success");
+      // Navigator.pop(context);
+    }
   }
 }

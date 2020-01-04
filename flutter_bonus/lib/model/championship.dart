@@ -21,6 +21,11 @@ class Championship {
     _total_matches = total_matches;
   }
 
+  Championship.fromJson(Map<String, dynamic> json)
+      : _id = json['id'],
+        _total_matches = json['total_matches'].toString(),
+        _trophy = json['trophy'].toString();
+
   Championship(String tm, String trophy) {
     _total_matches = tm;
     _trophy = trophy;

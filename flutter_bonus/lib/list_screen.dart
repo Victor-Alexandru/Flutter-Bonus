@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'api/ChampionshipApi.dart';
 import 'detail/detail.dart';
 import 'model/championship.dart';
 import 'package:toast/toast.dart';
@@ -32,22 +35,17 @@ class _ListPageState extends State<ListPage> {
   final _formKey = GlobalKey<FormState>();
   String _input_total_matches;
   String _input_trophy;
+  final String url = "http://192.168.1.106:8000/team/championships/";
 
   final TextEditingController _textEditingController =
       new TextEditingController();
   final TextEditingController _textEditingControllerTM =
       new TextEditingController();
 
-  _ListPageState() {
-    championships.add(new Championship('12', 'Liga 1 Bergembier'));
-    championships.add(new Championship('13', 'Liga 1 Betano'));
-    championships.add(new Championship('15', 'Ligue 1'));
-    championships.add(new Championship('20', 'Medicine Championsip'));
-    championships.add(new Championship('20', 'Medicine Championsip'));
-    championships.add(new Championship('20', 'Medicine Championsip'));
-    championships.add(new Championship('20', 'Medicine Championsip'));
-    championships.add(new Championship('20', 'Medicine Championsip'));
-    championships.add(new Championship('20', 'Medicine Championsip'));
+  @override
+  void initState() {
+    super.initState();
+    _getChampionships();
   }
 
   Widget ChampionshipCell(BuildContext ctx, int index) {
@@ -58,7 +56,7 @@ class _ListPageState extends State<ListPage> {
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    ChampionshipDetailPage(championships[index])));
+                    ChampionshipDetailPage(championships[index], url,championships,index)));
       },
       child: Card(
           margin: EdgeInsets.all(8),
@@ -100,7 +98,9 @@ class _ListPageState extends State<ListPage> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.list),
-            onPressed: () {},
+            onPressed: () {
+              _getChampionships();
+            },
           ),
         ],
       ),
@@ -165,5 +165,16 @@ class _ListPageState extends State<ListPage> {
         builder: (_) {
           return alert;
         });
+  }
+
+  _getChampionships() async {
+    API.getChampionships().then((response) {
+      setState(() {
+        print(response.body);
+        Iterable list = json.decode(response.body);
+        championships =
+            list.map((model) => Championship.fromJson(model)).toList();
+      });
+    });
   }
 }
