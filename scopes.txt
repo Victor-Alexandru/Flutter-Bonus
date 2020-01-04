@@ -1,4 +1,5 @@
 +1 point for supporting external authentication providers: google, facebook, etc. (firebase-auth is OK).
 +1 point for using animations.
 +1 point at least a unit test for one of the CRUD operations.
-+1 point the app was published on Google Play.
+//+1 point the app was published on Google Play. - prea greu
++1 point for giving the user the choice to toggle some app settings.
