@@ -210,7 +210,7 @@ class _ListPageState extends State<ListPage> {
       }
     });
 
-    API.getChampionships().then((response) {
+    API.getChampionships(url).then((response) {
       setState(() {
         print(response.body);
         Iterable list = json.decode(response.body);
@@ -227,7 +227,6 @@ class _ListPageState extends State<ListPage> {
     final Map parsed = json.decode(response.body.toString());
     c.id = parsed['id'];
 
-    print(statusCode);
     if (statusCode == 201) {
       setState(() => this.championships.add(c));
       _textEditingController.clear();

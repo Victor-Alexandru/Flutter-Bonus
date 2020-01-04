@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bonus/api/ChampionshipApi.dart';
 import 'package:flutter_bonus/model/championship.dart';
 import 'package:toast/toast.dart';
 import 'package:http/http.dart';
@@ -169,7 +170,7 @@ class _ChampionshipDetailPageState extends State<ChampionshipDetailPage> {
   _delete(c_id, _index) async {
     this.check().then((internet) async {
       if (internet != null && internet) {
-        Response response = await delete(_deleteUrl);
+        Response response = await API.makeDeleteRequest(_deleteUrl);
         if (response.statusCode == 204) {
           setState(() {
             _championships.removeAt(_index);
