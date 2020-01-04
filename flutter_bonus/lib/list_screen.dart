@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:http/http.dart';
 import 'package:flutter/material.dart';
 import 'api/ChampionshipApi.dart';
 import 'detail/detail.dart';
@@ -55,8 +55,8 @@ class _ListPageState extends State<ListPage> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) =>
-                    ChampionshipDetailPage(championships[index], url,championships,index)));
+                builder: (context) => ChampionshipDetailPage(
+                    championships[index], url, championships, index)));
       },
       child: Card(
           margin: EdgeInsets.all(8),
@@ -153,8 +153,14 @@ class _ListPageState extends State<ListPage> {
             onPressed: () {
               if (_textEditingController.text != "" &&
                   _textEditingControllerTM.text != "") {
-                Toast.show("You can submit", context,
-                    duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
+                var c = new Championship(
+                    _textEditingControllerTM.text, _textEditingController.text);
+                String jsonDict = '{"total_matches":"' +
+                    _textEditingControllerTM.text +
+                    '" , "trophy": "' +
+                    _textEditingController.text +
+                    '"}';
+                _makePostRequest(jsonDict, c);
               }
             },
             child: Text("Save")),
@@ -176,5 +182,20 @@ class _ListPageState extends State<ListPage> {
             list.map((model) => Championship.fromJson(model)).toList();
       });
     });
+  }
+
+  _makePostRequest(jsonDict, c) async {
+    Map<String, String> headers = {"Content-type": "application/json"};
+    Response response = await post(url, headers: headers, body: jsonDict);
+    int statusCode = response.statusCode;
+    final Map parsed = json.decode(response.body.toString());
+    c.id = parsed['id'];
+
+    print(statusCode);
+    if (statusCode == 201) {
+      setState(() => this.championships.add(c));
+      _textEditingController.clear();
+      _textEditingControllerTM.clear();
+    }
   }
 }
