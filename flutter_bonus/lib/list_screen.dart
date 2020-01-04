@@ -5,6 +5,7 @@ import 'api/ChampionshipApi.dart';
 import 'detail/detail.dart';
 import 'model/championship.dart';
 import 'package:toast/toast.dart';
+import 'package:connectivity/connectivity.dart';
 
 class ListScreen extends StatelessWidget {
   // This widget is the root of your application.
@@ -30,6 +31,16 @@ class ListPage extends StatefulWidget {
 }
 
 class _ListPageState extends State<ListPage> {
+  Future<bool> check() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile) {
+      return true;
+    } else if (connectivityResult == ConnectivityResult.wifi) {
+      return true;
+    }
+    return false;
+  }
+
   List<Championship> championships = new List<Championship>();
 
   final _formKey = GlobalKey<FormState>();
@@ -160,7 +171,19 @@ class _ListPageState extends State<ListPage> {
                     '" , "trophy": "' +
                     _textEditingController.text +
                     '"}';
-                _makePostRequest(jsonDict, c);
+
+                check().then((intenet) async {
+                  if (intenet != null && intenet) {
+                    _makePostRequest(jsonDict, c);
+                  } else {
+                    Toast.show("Added local", context,
+                        duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
+                    c.id = -250;
+                    setState(() {
+                      championships.add(c);
+                    });
+                  }
+                });
               }
             },
             child: Text("Save")),
@@ -174,6 +197,19 @@ class _ListPageState extends State<ListPage> {
   }
 
   _getChampionships() async {
+    championships.forEach((elem) async {
+      if (elem.id == -250) {
+        Map<String, String> headers = {"Content-type": "application/json"};
+        String jsonDict = '{"total_matches":"' +
+            elem.total_matches +
+            '" , "trophy": "' +
+            elem.trophy +
+            '"}';
+        // make POST request
+        await post(url, headers: headers, body: jsonDict);
+      }
+    });
+
     API.getChampionships().then((response) {
       setState(() {
         print(response.body);

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bonus/model/championship.dart';
 import 'package:toast/toast.dart';
 import 'package:http/http.dart';
+import 'package:connectivity/connectivity.dart';
 
 class ChampionshipDetailPage extends StatefulWidget {
   Championship _currentChampionship;
@@ -32,6 +33,16 @@ class _ChampionshipDetailPageState extends State<ChampionshipDetailPage> {
   String _url;
   String _putUrl;
   String _deleteUrl;
+
+  Future<bool> check() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile) {
+      return true;
+    } else if (connectivityResult == ConnectivityResult.wifi) {
+      return true;
+    }
+    return false;
+  }
 
   _ChampionshipDetailPageState(Championship c, String _url,
       List<Championship> championships, var index) {
@@ -114,8 +125,7 @@ class _ChampionshipDetailPageState extends State<ChampionshipDetailPage> {
                 RaisedButton(
                   onPressed: () {
                     final form = _formKey.currentState;
-                    Toast.show("IN HANDLE  UPDATE", context,
-                        duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
+
                     if (form != null) {
                       form.save();
 
@@ -157,30 +167,44 @@ class _ChampionshipDetailPageState extends State<ChampionshipDetailPage> {
   }
 
   _delete(c_id, _index) async {
-    Response response = await delete(_deleteUrl);
-    if (response.statusCode == 204) {
-      setState(() {
-        _championships.removeAt(_index);
-        Navigator.pop(context);
-      });
-      print("delete a avut succcess");
-    }
+    this.check().then((internet) async {
+      if (internet != null && internet) {
+        Response response = await delete(_deleteUrl);
+        if (response.statusCode == 204) {
+          setState(() {
+            _championships.removeAt(_index);
+            Navigator.pop(context);
+          });
+          print("delete a avut succcess");
+        }
+      } else {
+        Toast.show("Delete off when no network", context,
+            duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
+      }
+    });
   }
 
   _makePutrequest(json, tm, trp) async {
-    Map<String, String> headers = {"Content-type": "application/json"};
-    Response response = await put(_putUrl, headers: headers, body: json);
-    if (response.statusCode == 200) {
-      setState(() {
-        var c1 = new Championship(tm, trp);
-        c1.id = _currentChampionship.id;
-        setState(() {
-          _championships[_index] = c1;
-          _currentChampionship = c1;
-        });
-      });
-      print("Put cu success");
-      // Navigator.pop(context);
-    }
+    this.check().then((internet) async {
+      if (internet != null && internet) {
+        Map<String, String> headers = {"Content-type": "application/json"};
+        Response response = await put(_putUrl, headers: headers, body: json);
+        if (response.statusCode == 200) {
+          setState(() {
+            var c1 = new Championship(tm, trp);
+            c1.id = _currentChampionship.id;
+            setState(() {
+              _championships[_index] = c1;
+              _currentChampionship = c1;
+            });
+          });
+          print("Put cu success");
+          // Navigator.pop(context);
+        }
+      } else {
+        Toast.show("Update off when no network", context,
+            duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
+      }
+    });
   }
 }
